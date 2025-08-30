@@ -1,3 +1,5 @@
+
+'use server'; 
 export const runtime = "nodejs";
 
 import postgres, { Sql } from 'postgres';
