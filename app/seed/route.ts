@@ -1,12 +1,14 @@
 export const runtime = "nodejs";
 
-import  bcrypt from "bcryptjs";
 import postgres, { Sql } from 'postgres';
 import { invoices, customers, revenue, users } from '../lib/placeholder-data';
 
 const sql: Sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
 async function seedUsers() {
+  // dynamically import bcryptjs at runtime
+  const bcrypt = await import("bcryptjs");
+
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await sql`
     CREATE TABLE IF NOT EXISTS users (
@@ -114,6 +116,7 @@ export async function GET() {
 
     return Response.json({ message: 'Database seeded successfully' });
   } catch (error) {
+    console.error("Seeding error:", error);
     return Response.json({ error }, { status: 500 });
   }
 }
